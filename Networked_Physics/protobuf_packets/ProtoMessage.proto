@@ -1,0 +1,159 @@
+syntax = "proto3";
+package ProtobufMessage;
+
+option csharp_namespace = "Google.Protobuf.ProtobufMessage";
+
+message UDPMessage {
+	oneof msg {
+		LockStepMessage lockstepmsg = 1;
+		SnapShotMessage snapshotmsg = 2;
+		StateMessage statemsg = 3;
+		UDPStringMessage udpstringmsg = 4;
+		SnapShotInputMessage snapshotinputmsg = 5;
+		StateACKPacket stateack = 6;
+		PredictionReconciliationMessage predictionreconciliationmsg = 7;
+		PredictionReconciliationInputMessage predictionreconciliationinputmsg = 8;
+		ServerTimeRequest servertimerequestmsg = 9;
+	}
+}
+
+message LockStepMessage {
+	message Input {
+		bool left = 1;
+		bool right = 2;
+		bool up = 3;
+		bool down = 4;
+		bool space = 5;
+	}
+
+	repeated Input inputs = 1;
+}
+
+message SnapShotMessage {
+	int32 netID = 1;
+	int32 sequence = 2;
+	int32 deltapacketindex = 3;
+	bool initial = 4;
+	int32 inputack = 5;
+	
+	message Objectstate {
+		bool interacting = 1;
+		float positionX = 2;
+		float positionY = 3;
+		float angle = 4;
+	}
+	
+	repeated Objectstate objectsnapshot = 6;
+}
+
+message SnapShotInputMessage {
+	int32 sequence = 1;
+	bool left = 2;
+	bool right = 3;
+	bool up = 4;
+	bool down = 5;
+	bool space = 6;
+}
+
+message UDPMessageSnapshot {
+	int32 netid = 1;
+	float positionX = 2;
+	float positionY = 3;
+	float angle = 4;
+}
+
+message StateMessage {
+	int32 netID = 1;
+	int32 sequence = 2;
+	int32 baseACKSequence = 3;
+	
+	message Input {
+		bool left = 1;
+		bool right = 2;
+		bool up = 3;
+		bool down = 4;
+		bool space = 5;
+	}
+
+	repeated Input inputs = 4;
+	
+	message Objectstate
+	{
+		int32 index = 1;
+		bool absoluteValue = 2;
+		int32 baseSequence = 3;
+		float positionX = 4;
+		float positionY = 5;
+		float angle = 6;
+		float linear_velocityX = 7;
+		float linear_velocityY = 8;
+		float angular_velocity = 9;
+	}
+	
+	repeated Objectstate objectstate = 5;
+	float timestamp = 6;
+}
+
+message UDPStringMessage {
+	string msg = 1;
+}
+
+message StateACKPacket {
+	int32 netID = 1;
+	int32 ackSequence = 2;
+	int32 ackBits = 3;
+}
+
+message TCPMessage {
+	string msg = 1;
+}
+
+message PredictionReconciliationMessage {
+	int32 netID = 1;
+	int32 sequence = 2;
+	
+	message Input {
+		bool left = 1;
+		bool right = 2;
+		bool up = 3;
+		bool down = 4;
+		bool space = 5;
+	}
+
+	repeated Input inputs = 4;
+	
+	message Objectstate
+	{
+		float positionX = 1;
+		float positionY = 2;
+		float angle = 3;
+		float linear_velocityX = 4;
+		float linear_velocityY = 5;
+		float angular_velocity = 6;
+	}
+	
+	repeated Objectstate objectstate = 5;
+	float timestamp = 6;
+}
+
+message PredictionReconciliationInputMessage {
+	int32 sequence = 1;
+	int32 netid = 2;
+	
+	message Input {
+		bool left = 1;
+		bool right = 2;
+		bool up = 3;
+		bool down = 4;
+		bool space = 5;
+	}
+
+	repeated Input inputs = 3;
+}
+
+message ServerTimeRequest {
+	int32 clientID = 1;
+	int32 clienttime = 2;
+	int32 servertime = 3;
+}
+
